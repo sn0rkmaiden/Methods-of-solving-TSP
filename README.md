@@ -12,7 +12,7 @@ There are two versions of the algorithm available. First is draft implementation
 
 :memo: Benchmark table:
 
-| dimension | var_norm_error | mean_norm_error |      0.25 |       0.5 |      0.75 |           |
+|           |   dimension    |  var_norm_error | mean_norm_error |    0.25 |      0.5  |     0.75  |
 |----------:|---------------:|----------------:|----------:|----------:|----------:|-----------|
 |     0     |             34 |        2.986226 | 11.396721 |  9.639344 | 11.016393 | 13.442623 |
 |     1     |             36 |        7.056806 | 17.611902 | 15.920651 | 17.980671 | 19.544761 |
