@@ -40,8 +40,10 @@ Gives exact solutions for a number of dimensions: `[17, 34, 36, 39, 45, 48]`. It
 
 ![results](images/bbound_time_dimension.png)
 
-A one-way branching scheme has been implemented. If the conditions for leaving the branch are not met, we always select the set containing the edge used for splitting first. The code uses the isCycle function, which receives an array of selected edges and a checked edge as input. It determines whether adding the checked edge to the selected ones will result in a loop. If this is not the case, it finds an edge that, together with the one being checked and the selected ones, will close the cycle. 
-Using isCycle allows you to quickly cut off routes containing subcycles.
+A one-way branching scheme has been implemented. If the conditions for leaving the branch are not met, we always select the set containing the edge used for splitting first. The code uses the *isCycle* function, which receives an array of selected edges and a checked edge as input. It determines whether adding the checked edge to the selected ones will result in a loop. If this is not the case, it finds an edge that, together with the one being checked and the selected ones, will close the cycle. 
+Using *isCycle* allows you to quickly cut off routes containing subcycles. 
+
+Also, inside the code, you can find an example of the dist matrix, for which, if the **if iteration == NB_TOWNS - 2 (1)** check is excluded, the algorithm will arrive at an incorrect answer (43 instead of 41). The comment containing this matrix explains in detail why this error occurs. Adding a condition **(1)** solves this problem and at the same time allows you to build a solution one iteration earlier using the reversedEdge obtained after calling the *isCycle* function.
 
 ## :ant: Ant Colony Optimization
 
