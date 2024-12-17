@@ -67,14 +67,10 @@ def build_next_neighbor():
     return eval
 
 
-def build_solution(starting_town, ending_town, adding=False):
+def build_solution(starting_town, ending_town):
     print("build_solution is called")
     global best_eval
 
-    if adding:
-        starting_town[NB_TOWNS - 1] = sum(i for i in range(1, NB_TOWNS)) - sum(starting_town[:NB_TOWNS - 1])
-        ending_town[NB_TOWNS - 1] = sum(i for i in range(1, NB_TOWNS)) - sum(ending_town[:NB_TOWNS - 1])
- #       print("Вот такой состав рёбер получился", get_current_route(starting_town, ending_town))
     solution = [-1] * NB_TOWNS
     currentNode = 0
 
@@ -275,7 +271,7 @@ def branch_and_bound(dist, iteration, evalParentNode, starting_town, ending_town
             starting_town[iteration] = maxZero[1]
             ending_town[iteration] = maxZero[2]
             print("--Number of iterations:", count)
-            build_solution(starting_town, ending_town, True)
+            build_solution(starting_town, ending_town)
             return
         else:
             # Всё плохо, если это ребро добавить, будет цикл, причём не тот, который хочется (не все города содержит).
@@ -287,7 +283,7 @@ def branch_and_bound(dist, iteration, evalParentNode, starting_town, ending_town
 
     # Но если осталось два ребра до маршрута и замыкающее ещё не отброшено,
     # можем уже на этом уровне дерева собрать маршрут
-    # Условие (*):
+    # Условие (1):
     if iteration == NB_TOWNS - 2 and m[reversedEdge[0], reversedEdge[1]] != math.inf:
         starting_town[iteration] = maxZero[1]
         ending_town[iteration] = maxZero[2]
@@ -317,7 +313,7 @@ def branch_and_bound(dist, iteration, evalParentNode, starting_town, ending_town
 
 
 '''
-# Вызывая branch_and_bound от этой матрицы, увидим, почему условие (*) необходимо для корректной работы алгоритма - если его 
+# Вызывая branch_and_bound от этой матрицы, увидим, почему условие (1) необходимо для корректной работы алгоритма - если его 
 # отбросить, можем оказаться в ситуации, когда отброшенное на iteration == NB_TOWNS - 2 ребро reversedAge соответствует единственной ячейке матрицы m2,
 # отличной от math.inf. Это приведёт к выходу с ветки, потенциально содержащей оптимальное решение, на условии if maxZero[0] == -1, поэтому, хотя условие
 # isCycle & (iteration == NB_TOWNS - 2) == True, построения решения build_solution не произойдёт.
