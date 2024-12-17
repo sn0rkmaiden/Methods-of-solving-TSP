@@ -106,7 +106,7 @@ def get_index(el, arr):
 
 def check_for_cycle(head_1, tail_1, starting_town, ending_town):
     '''
-    Эта функция очень полезна в отсеивании множеств маршрутов (см. branch_and_bound) -- я про неё говорила на сдаче
+    Эта функция очень полезна в отсеивании множеств маршрутов (см. branch_and_bound)
   На вход она принимает ребро, по которому хотим провести разбиение, и уже набранные рёбра
  Далее проходит проверка, создаст ли новое ребро цикл с уже набранными. Если да, возвращается [True, 0]
  Если нет, возвращается [False, [**]], где [**] - ребро, которое содаст цикл в массиве из набранных рёбер
@@ -127,8 +127,7 @@ def check_for_cycle(head_1, tail_1, starting_town, ending_town):
         if tail == -1 and head == -1:
 #            print("for_del", for_deleting)
             pass
-        elif tail == -1: #проверяемое ребро соединяется только своим концом с добавленными, идём по
-            # добавленным до разрыва
+        elif tail == -1: #проверяемое ребро соединяется только своим концом с добавленными, идём по добавленным до разрыва
             y = ending_town_cutted[head]
             x = get_index(y, starting_town_cutted)
             while x != -1:
@@ -192,8 +191,6 @@ def check_for_zeros(m1): # if in return [0] == -1 -- there are no zeros in matri
     maxZero = [-1, 0, 0]
     nbZerosC = NB_TOWNS - np.count_nonzero(m1, 0)
     nbZerosR = NB_TOWNS - np.count_nonzero(m1, 1)
-#    print("Здесь должна быть матрица, в которой считаем нули", m1)
-#    print("здесь должны быть количества нулей", nbZerosR, nbZerosC)
     for i in range(NB_TOWNS):
         for j in range(NB_TOWNS):
             if m1[i][j] == 0:
@@ -215,8 +212,7 @@ def branch_and_bound(dist, iteration, evalParentNode, starting_town, ending_town
     # Число итераций - в переменной count
     global count
     count += 1
-    if count % 80000 == 0:
-        print(count, get_current_route(starting_town, ending_town))
+    
 #    print("iteration", iteration)
 #    print("dist", dist)
 #    print(get_current_route(starting_town, ending_town))
@@ -267,7 +263,7 @@ def branch_and_bound(dist, iteration, evalParentNode, starting_town, ending_town
                     maxZero = (v, i, j)
 
     if maxZero[0] == -1: # Больше нет выбора (если в матрице нет нулей, значит, она вся заполнена бесконечностями)
-#        print("\n\nУпёрся в отсутствие нулей", np.amin(m))
+#        print(np.amin(m))
         return
 
 #    print(f"for_chose [{maxZero[1]}, {maxZero[2]}]")
@@ -275,7 +271,7 @@ def branch_and_bound(dist, iteration, evalParentNode, starting_town, ending_town
 
     if isCycle:
         if iteration == NB_TOWNS - 1:
-            # Всё ок, замкнём цикл, содержащий все города, добавив ребро maxZero[1:]
+            # Всё ок, замкнём цикл, содержащий все города, добавив ребро [maxZero[1], maxZero[2]]
             starting_town[iteration] = maxZero[1]
             ending_town[iteration] = maxZero[2]
             print("--Number of iterations:", count)
@@ -321,6 +317,10 @@ def branch_and_bound(dist, iteration, evalParentNode, starting_town, ending_town
 
 
 '''
+# Вызывая branch_and_bound от этой матрицы, увидим, почему условие (*) необходимо для корректной работы алгоритма - если его 
+# отбросить, можем оказаться в ситуации, когда отброшенное на iteration == NB_TOWNS - 2 ребро reversedAge соответствует единственной ячейке матрицы m2,
+# отличной от math.inf. Это приведёт к выходу с ветки, потенциально содержащей оптимальное решение, на условии if maxZero[0] == -1, поэтому, хотя условие
+# isCycle & (iteration == NB_TOWNS - 2) == True, построения решения build_solution не произойдёт.
 dist = np.array([[0.0, 20, 18, 12, 8],
                  [5, 0, 14, 7, 11],
                  [12, 18, 0, 6, 11],
@@ -346,7 +346,7 @@ print("Runtime : %s seconds " % (time.time() - start_time))
 
 
 '''
-Dimension: 17 (with zeroes)
+Dimension: 17 (with zeros)
 Best evaluation : 39.0
 Runtime : 706.89350938797 seconds
 Number of iterations: 7796
